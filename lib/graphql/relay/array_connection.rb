@@ -7,7 +7,7 @@ module GraphQL
       def cursor_from_node(item)
         idx = sliced_nodes.find_index(item)
         cursor_parts = [(order || "none"), idx]
-        Base64.strict_encode64(cursor_parts.join(CURSOR_SEPARATOR))
+        Base64.urlsafe_encode64(cursor_parts.join(CURSOR_SEPARATOR), padding: false)
       end
 
       private
@@ -40,7 +40,7 @@ module GraphQL
       end
 
       def index_from_cursor(cursor)
-        decoded = Base64.decode64(cursor)
+        decoded = Base64.urlsafe_decode64(cursor)
         order, index = decoded.split(CURSOR_SEPARATOR)
         index.to_i
       end

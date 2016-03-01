@@ -63,13 +63,13 @@ module GraphQL
         if type_name.include?(self.class.id_separator) || id_str.include?(self.class.id_separator)
           raise "to_global_id(#{type_name}, #{id}) contains reserved characters `#{self.class.id_separator}`"
         end
-        Base64.strict_encode64([type_name, id_str].join(self.class.id_separator))
+        Base64.urlsafe_encode64([type_name, id_str].join(self.class.id_separator), padding: false)
       end
 
       # Get type-name & ID from global ID
       # (This reverts the opaque transform)
       def from_global_id(global_id)
-        Base64.decode64(global_id).split(self.class.id_separator)
+        Base64.urlsafe_decode64(global_id).split(self.class.id_separator)
       end
 
       # Use the provided config to

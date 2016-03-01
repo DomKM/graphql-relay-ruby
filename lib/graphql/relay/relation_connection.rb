@@ -6,7 +6,7 @@ module GraphQL
       def cursor_from_node(item)
         order_value = item.public_send(order_name)
         cursor_parts = [order, order_value]
-        Base64.strict_encode64(cursor_parts.join(CURSOR_SEPARATOR))
+        Base64.urlsafe_encode64(cursor_parts.join(CURSOR_SEPARATOR), padding: false)
       end
 
       def order
@@ -63,7 +63,7 @@ module GraphQL
       end
 
       def slice_from_cursor(cursor)
-        decoded = Base64.decode64(cursor)
+        decoded = Base64.urlsafe_decode64(cursor)
         order, order_value = decoded.split(CURSOR_SEPARATOR)
       end
 
